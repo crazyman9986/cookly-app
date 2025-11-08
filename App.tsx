@@ -98,7 +98,7 @@ const App: React.FC = () => {
                         favRecipe.name === recipe.name ? { ...favRecipe, imageUrl } : favRecipe
                     )
                 );
-                await delay(1500); // Stagger requests to avoid rate limits
+                await delay(2000); // Stagger requests to avoid rate limits
             } catch (err) {
                 console.error(`Failed to generate favorite image for "${recipe.name}":`, err);
             }
@@ -144,7 +144,7 @@ const App: React.FC = () => {
                   setRecipes(prevRecipes => 
                       prevRecipes.map(r => r.name === recipe.name ? { ...r, imageUrl } : r)
                   );
-                  await delay(1500); // Wait 1.5 seconds before the next request to respect free tier limits
+                  await delay(2000); // Wait 2 seconds before the next request to respect free tier limits
               } catch (err) {
                   console.error(`Failed to generate image for "${recipe.name}":`, err);
                   // Continue to the next image even if one fails

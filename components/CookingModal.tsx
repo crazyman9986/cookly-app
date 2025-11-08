@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Recipe, Ingredient } from '../types';
+import { Recipe, Ingredient, InstructionStep } from '../types';
 import { getIngredientInfo, generateRecipeImage } from '../services/geminiService';
 import { XIcon } from './icons/XIcon';
 import { PlusIcon } from './icons/PlusIcon';
@@ -21,8 +21,7 @@ import { ShareIcon } from './icons/ShareIcon';
 import { ResetIcon } from './icons/ResetIcon';
 import { GlobeIcon } from './icons/GlobeIcon';
 import { TagIcon } from './icons/TagIcon';
-
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+import { WarningIcon } from './icons/WarningIcon';
 
 interface CookingModalProps {
   recipe: Recipe;
@@ -43,6 +42,80 @@ interface TooltipState {
   y: number;
   width: number;
 }
+
+
+// A new component to handle on-demand image generation for each step.
+const StepImage: React.FC<{
+    step: InstructionStep;
+    onImageLoaded: (url: string) => void;
+  }> = ({ step, onImageLoaded }) => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const imageRef = useRef<HTMLDivElement>(null);
+  
+    useEffect(() => {
+      let isMounted = true;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && isMounted) {
+            // Stop observing after it becomes visible to prevent re-triggering
+            observer.disconnect();
+  
+            if (step.imagePrompt && !step.imageUrl) {
+              generateRecipeImage(step.imagePrompt)
+                .then(imageUrl => {
+                  if (isMounted) {
+                    onImageLoaded(imageUrl);
+                    setIsLoading(false);
+                  }
+                })
+                .catch(err => {
+                  console.error("Failed to generate step image:", err);
+                  if (isMounted) {
+                    setError(true);
+                    setIsLoading(false);
+                  }
+                });
+            } else {
+              setIsLoading(false);
+            }
+          }
+        },
+        { threshold: 0.1 } // Trigger when 10% of the image placeholder is visible
+      );
+  
+      if (imageRef.current) {
+        observer.observe(imageRef.current);
+      }
+  
+      return () => {
+        isMounted = false;
+        observer.disconnect();
+      };
+    }, [step.imagePrompt, step.imageUrl, onImageLoaded]);
+  
+    if (!step.imagePrompt) return null;
+  
+    if (step.imageUrl) {
+      return <img src={step.imageUrl} alt={`Visual for step`} className="w-full aspect-video object-cover rounded-lg shadow-sm" />;
+    }
+  
+    if (error) {
+        return (
+            <div ref={imageRef} className="w-full aspect-video bg-red-100 dark:bg-red-900/20 rounded-lg flex flex-col items-center justify-center text-center p-4">
+                <WarningIcon className="w-8 h-8 text-red-500 dark:text-red-400 mb-2" />
+                <p className="text-sm text-red-700 dark:text-red-300">Image generation failed. This might be due to API rate limits.</p>
+            </div>
+        )
+    }
+  
+    return (
+      <div ref={imageRef} className="w-full aspect-video bg-gray-200 dark:bg-slate-700 animate-pulse rounded-lg flex items-center justify-center">
+        <svg className="w-10 h-10 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"></path></svg>
+      </div>
+    );
+};
+
 
 const CookingModal: React.FC<CookingModalProps> = ({ recipe, onClose, onAddToShoppingList, onUpdateRecipe, isFavorite, onToggleFavorite, onShare }) => {
   const [currentlySpeakingIndex, setCurrentlySpeakingIndex] = useState<number | null>(null);
@@ -65,40 +138,6 @@ const CookingModal: React.FC<CookingModalProps> = ({ recipe, onClose, onAddToSho
     Medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
     Hard: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300',
   };
-
-  useEffect(() => {
-    const generateStepImages = async () => {
-        const stepsToProcess = recipe.steps.filter(step => step.imagePrompt && !step.imageUrl);
-        
-        if (stepsToProcess.length === 0) {
-            return; // Nothing to do
-        }
-
-        const newSteps = [...recipe.steps];
-        let recipeWasUpdated = false;
-
-        for (const step of stepsToProcess) {
-            try {
-                const imageUrl = await generateRecipeImage(step.imagePrompt as string);
-                const stepIndex = newSteps.findIndex(s => s.text === step.text && s.imagePrompt === step.imagePrompt);
-                if (stepIndex > -1) {
-                    newSteps[stepIndex] = { ...newSteps[stepIndex], imageUrl };
-                    recipeWasUpdated = true;
-                }
-                await delay(1500); // Wait 1.5 seconds before processing the next image
-            } catch (err) {
-                console.error(`Failed to generate image for step: "${step.text}"`, err);
-            }
-        }
-
-        if (recipeWasUpdated) {
-            onUpdateRecipe({ ...recipe, steps: newSteps });
-        }
-    };
-
-    generateStepImages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recipe.name]);
 
   useEffect(() => {
     setEditedPrepTime(String(recipe.prepTime));
@@ -600,13 +639,14 @@ const CookingModal: React.FC<CookingModalProps> = ({ recipe, onClose, onAddToSho
                     </button>
                   </div>
                   <div className="mt-3 ml-11">
-                    {step.imageUrl ? (
-                      <img src={step.imageUrl} alt={`Visual for step ${i + 1}`} className="w-full aspect-video object-cover rounded-lg shadow-sm" />
-                    ) : step.imagePrompt ? (
-                      <div className="w-full aspect-video bg-gray-200 dark:bg-slate-700 animate-pulse rounded-lg flex items-center justify-center">
-                        <svg className="w-10 h-10 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"></path></svg>
-                      </div>
-                    ) : null}
+                    <StepImage 
+                       step={step}
+                       onImageLoaded={(url) => {
+                           const newSteps = [...recipe.steps];
+                           newSteps[i] = { ...newSteps[i], imageUrl: url };
+                           onUpdateRecipe({ ...recipe, steps: newSteps });
+                       }}
+                    />
                   </div>
                 </li>
               ))}
