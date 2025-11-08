@@ -22,6 +22,7 @@ import { ResetIcon } from './icons/ResetIcon';
 import { GlobeIcon } from './icons/GlobeIcon';
 import { TagIcon } from './icons/TagIcon';
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 interface CookingModalProps {
   recipe: Recipe;
@@ -67,30 +68,36 @@ const CookingModal: React.FC<CookingModalProps> = ({ recipe, onClose, onAddToSho
 
   useEffect(() => {
     const generateStepImages = async () => {
-      const updatedSteps = [...recipe.steps];
-      let recipeNeedsUpdate = false;
-      
-      const imageGenerationPromises = recipe.steps.map(async (step, index) => {
-        if (step.imagePrompt && !step.imageUrl) {
-          try {
-            const imageUrl = await generateRecipeImage(step.imagePrompt);
-            updatedSteps[index] = { ...step, imageUrl };
-            recipeNeedsUpdate = true;
-          } catch (err) {
-            console.error(`Failed to generate image for step ${index + 1}:`, err);
-          }
+        const stepsToProcess = recipe.steps.filter(step => step.imagePrompt && !step.imageUrl);
+        
+        if (stepsToProcess.length === 0) {
+            return; // Nothing to do
         }
-      });
 
-      await Promise.all(imageGenerationPromises);
+        const newSteps = [...recipe.steps];
+        let recipeWasUpdated = false;
 
-      if (recipeNeedsUpdate) {
-        onUpdateRecipe({ ...recipe, steps: updatedSteps });
-      }
+        for (const step of stepsToProcess) {
+            try {
+                const imageUrl = await generateRecipeImage(step.imagePrompt as string);
+                const stepIndex = newSteps.findIndex(s => s.text === step.text && s.imagePrompt === step.imagePrompt);
+                if (stepIndex > -1) {
+                    newSteps[stepIndex] = { ...newSteps[stepIndex], imageUrl };
+                    recipeWasUpdated = true;
+                }
+                await delay(1500); // Wait 1.5 seconds before processing the next image
+            } catch (err) {
+                console.error(`Failed to generate image for step: "${step.text}"`, err);
+            }
+        }
+
+        if (recipeWasUpdated) {
+            onUpdateRecipe({ ...recipe, steps: newSteps });
+        }
     };
 
     generateStepImages();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [recipe.name]);
 
   useEffect(() => {

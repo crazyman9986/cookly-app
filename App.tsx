@@ -12,6 +12,8 @@ import ManualIngredientInput from './components/ManualIngredientInput';
 import { XIcon } from './components/icons/XIcon';
 import { WarningIcon } from './components/icons/WarningIcon';
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 const App: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
   const [ingredients, setIngredients] = useState<string[]>([]);
@@ -87,19 +89,21 @@ const App: React.FC = () => {
     if (view === 'favorites') {
       const recipesToUpdate = favoriteRecipes.filter(r => !r.imageUrl && r.imagePrompt);
       
-      recipesToUpdate.forEach(recipe => {
-        generateRecipeImage(recipe.imagePrompt)
-          .then(imageUrl => {
-            setFavoriteRecipes(prevFavorites => 
-              prevFavorites.map(favRecipe => 
-                favRecipe.name === recipe.name ? { ...favRecipe, imageUrl } : favRecipe
-              )
-            );
-          })
-          .catch(err => {
-            console.error(`Failed to generate favorite image for "${recipe.name}":`, err);
-          });
-      });
+      (async () => {
+        for (const recipe of recipesToUpdate) {
+            try {
+                const imageUrl = await generateRecipeImage(recipe.imagePrompt);
+                setFavoriteRecipes(prevFavorites =>
+                    prevFavorites.map(favRecipe =>
+                        favRecipe.name === recipe.name ? { ...favRecipe, imageUrl } : favRecipe
+                    )
+                );
+                await delay(1500); // Stagger requests to avoid rate limits
+            } catch (err) {
+                console.error(`Failed to generate favorite image for "${recipe.name}":`, err);
+            }
+        }
+      })();
     }
     // This effect should only run when the user navigates to the favorites view.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,20 +136,22 @@ const App: React.FC = () => {
       const suggestedRecipes = await getRecipes(currentIngredients, currentFilters, currentCuisines, language);
       setRecipes(suggestedRecipes); // Display recipes with text first
 
-      // Then, generate and update images in parallel
-      suggestedRecipes.forEach(recipe => {
-        if (!recipe.imagePrompt) return;
-        
-        generateRecipeImage(recipe.imagePrompt)
-          .then(imageUrl => {
-            setRecipes(prevRecipes => 
-              prevRecipes.map(r => r.name === recipe.name ? { ...r, imageUrl } : r)
-            );
-          })
-          .catch(err => {
-            console.error(`Failed to generate image for "${recipe.name}":`, err);
-          });
-      });
+      // Then, sequentially generate images to avoid rate limiting
+      for (const recipe of suggestedRecipes) {
+          if (recipe.imagePrompt) {
+              try {
+                  const imageUrl = await generateRecipeImage(recipe.imagePrompt);
+                  setRecipes(prevRecipes => 
+                      prevRecipes.map(r => r.name === recipe.name ? { ...r, imageUrl } : r)
+                  );
+                  await delay(1500); // Wait 1.5 seconds before the next request to respect free tier limits
+              } catch (err) {
+                  console.error(`Failed to generate image for "${recipe.name}":`, err);
+                  // Continue to the next image even if one fails
+              }
+          }
+      }
+
     } catch (err) {
       console.error(err);
       setError(translations.errorFetch);
@@ -316,7 +322,7 @@ const App: React.FC = () => {
     setShoppingList((prevList) => prevList.filter((item) => item.id !== itemId));
   };
   
-  const handleUpdateRecipe = (updatedRecipe: Recipe) => {
+  const handleUpdateRecipe = useCallback((updatedRecipe: Recipe) => {
     setRecipes(prevRecipes => 
       prevRecipes.map(r => (r.name === updatedRecipe.name ? updatedRecipe : r))
     );
@@ -324,7 +330,7 @@ const App: React.FC = () => {
     setFavoriteRecipes(prevFavorites =>
       prevFavorites.map(r => (r.name === updatedRecipe.name ? updatedRecipe : r))
     );
-  };
+  }, []);
 
   const handleToggleFavorite = (recipeToToggle: Recipe) => {
     setFavoriteRecipes(prevFavorites => {
