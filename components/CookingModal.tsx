@@ -62,6 +62,7 @@ const StepImage: React.FC<{
             observer.disconnect();
   
             if (step.imagePrompt && !step.imageUrl) {
+              // Use the new queued image generation
               generateRecipeImage(step.imagePrompt)
                 .then(imageUrl => {
                   if (isMounted) {
@@ -145,7 +146,7 @@ const CookingModal: React.FC<CookingModalProps> = ({ recipe, onClose, onAddToSho
     setIsEditingTime(false);
     setAddedItems([]); // Reset added items when the recipe changes
     setEditingIngredient(null);
-  }, [recipe.name]);
+  }, [recipe.name, recipe.prepTime, recipe.activeCookingTime]);
 
   const handleSaveTimeChanges = () => {
     const prepTime = parseInt(editedPrepTime, 10);

@@ -5,6 +5,80 @@ import { Recipe, DietaryFilter, Ingredient } from '../types';
 // Fix: Per coding guidelines, the API key must be accessed via process.env.API_KEY.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+// --- START: Smart Image Generation Queue ---
+const RATE_LIMIT_DELAY = 5000; // 5 seconds between requests, a safe buffer for the free tier.
+
+type QueuedImageRequest = {
+  prompt: string;
+  resolve: (value: string) => void;
+  reject: (reason?: any) => void;
+};
+
+const imageGenerationQueue: QueuedImageRequest[] = [];
+let isProcessingQueue = false;
+
+const processImageQueue = async () => {
+  if (isProcessingQueue) return;
+  isProcessingQueue = true;
+
+  while (imageGenerationQueue.length > 0) {
+    const request = imageGenerationQueue.shift();
+    if (request) {
+      try {
+        const imageUrl = await internalGenerateRecipeImage(request.prompt);
+        request.resolve(imageUrl);
+      } catch (error) {
+        console.error(`Queue: Failed to generate image for prompt "${request.prompt}"`, error);
+        request.reject(error);
+      } finally {
+        // Wait AFTER a request is completed to ensure a delay between them.
+        await new Promise(resolve => setTimeout(resolve, RATE_LIMIT_DELAY));
+      }
+    }
+  }
+
+  isProcessingQueue = false;
+};
+
+/**
+ * The new public-facing function to request an image.
+ * It adds the request to a queue and returns a promise that will resolve when the image is ready.
+ * @param prompt The prompt for the image generation AI.
+ * @returns A promise that resolves with the base64 image data URL.
+ */
+export const generateRecipeImage = (prompt: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    imageGenerationQueue.push({ prompt, resolve, reject });
+    processImageQueue(); // Kick off processing if it's not already running.
+  });
+};
+
+/**
+ * The internal function that actually calls the API. Renamed to avoid confusion.
+ * Should only be called by the queue processor.
+ */
+const internalGenerateRecipeImage = async (prompt: string): Promise<string> => {
+    const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash-image',
+        contents: {
+            parts: [{ text: prompt }],
+        },
+        config: {
+            responseModalities: [Modality.IMAGE],
+        },
+    });
+
+    for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData) {
+            const base64ImageBytes: string = part.inlineData.data;
+            return `data:${part.inlineData.mimeType};base64,${base64ImageBytes}`;
+        }
+    }
+    throw new Error("No image data found in the response.");
+};
+// --- END: Smart Image Generation Queue ---
+
+
 const recipeSchema = {
     type: Type.OBJECT,
     properties: {
@@ -278,26 +352,6 @@ export const translateRecipes = async (recipes: Recipe[], language: string): Pro
     const jsonText = response.text.trim();
     const result = JSON.parse(jsonText);
     return result.recipes || [];
-};
-
-export const generateRecipeImage = async (prompt: string): Promise<string> => {
-    const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: {
-            parts: [{ text: prompt }],
-        },
-        config: {
-            responseModalities: [Modality.IMAGE],
-        },
-    });
-
-    for (const part of response.candidates[0].content.parts) {
-        if (part.inlineData) {
-            const base64ImageBytes: string = part.inlineData.data;
-            return `data:${part.inlineData.mimeType};base64,${base64ImageBytes}`;
-        }
-    }
-    throw new Error("No image data found in the response.");
 };
 
 export const getIngredientInfo = async (ingredientName: string, language: string): Promise<{ text: string; sources: any[] }> => {
