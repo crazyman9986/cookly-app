@@ -1,7 +1,8 @@
+
 import { GoogleGenAI, Type, Modality } from '@google/genai';
 import { Recipe, DietaryFilter, Ingredient } from '../types';
 
-// Fix: The API key must be obtained from process.env.API_KEY as per the guidelines.
+// Fix: Per coding guidelines, the API key must be accessed via process.env.API_KEY.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const recipeSchema = {
