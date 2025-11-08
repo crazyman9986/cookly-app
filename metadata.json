@@ -1,0 +1,7 @@
+{
+  "name": "Cookly",
+  "description": "Your AI-powered culinary assistant. Snap a photo of your fridge, and Cookly will identify ingredients, suggest recipes, and help you build a shopping list.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

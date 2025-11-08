@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+      }
+    </script>
+    <style>
+      body {
+        background-color: #f0f2f5;
+      }
+      .dark body {
+        background-color: #0f172a; /* Corresponds to slate-900 */
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.2s ease-out forwards;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0"
+  }
+}
+</script>
+<script>
+  // Prevents FOUC (Flash of Unstyled Content) for dark mode
+  (function() {
+    try {
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    } catch (e) {
+      console.error('Could not apply dark mode from localStorage', e);
+    }
+  })();
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
