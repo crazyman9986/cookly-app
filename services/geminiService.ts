@@ -1,12 +1,8 @@
 import { GoogleGenAI, Type, Modality } from '@google/genai';
 import { Recipe, DietaryFilter, Ingredient } from '../types';
 
-const API_KEY = process.env.API_KEY;
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable not set");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+// Fix: The API key must be obtained from process.env.API_KEY as per the guidelines.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const recipeSchema = {
     type: Type.OBJECT,
