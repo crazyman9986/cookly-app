@@ -1,5 +1,5 @@
 
-import { GoogleGenAI, Type, Modality } from '@google/genai';
+import { GoogleGenAI, Type } from '@google/genai';
 import { Recipe, DietaryFilter, Ingredient } from '../types';
 
 // Fix: Per coding guidelines, the API key must be accessed via process.env.API_KEY.
@@ -54,27 +54,67 @@ export const generateRecipeImage = (prompt: string): Promise<string> => {
 };
 
 /**
- * The internal function that actually calls the API. Renamed to avoid confusion.
+ * The internal function that now calls the OpenRouter API.
  * Should only be called by the queue processor.
+ * It fetches an image URL from the API and then converts that image to a base64 string
+ * for direct use in the application.
  */
 const internalGenerateRecipeImage = async (prompt: string): Promise<string> => {
-    const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
-        contents: {
-            parts: [{ text: prompt }],
-        },
-        config: {
-            responseModalities: [Modality.IMAGE],
-        },
-    });
+    try {
+        // Step 1: Call OpenRouter API to get an image URL.
+        // Switched to Stable Diffusion 3, a model featured in OpenRouter's documentation,
+        // and simplified headers to resolve the persistent 405 error.
+        const response = await fetch('https://openrouter.ai/api/v1/images/generations', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${process.env.API_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: 'stabilityai/stable-diffusion-3',
+                prompt: prompt,
+            }),
+        });
 
-    for (const part of response.candidates[0].content.parts) {
-        if (part.inlineData) {
-            const base64ImageBytes: string = part.inlineData.data;
-            return `data:${part.inlineData.mimeType};base64,${base64ImageBytes}`;
+        if (!response.ok) {
+            const errorBody = await response.text();
+            throw new Error(`OpenRouter API failed with status ${response.status}. Response: ${errorBody}`);
         }
+
+        const data = await response.json();
+        const imageUrl = data.data?.[0]?.url;
+
+        if (!imageUrl) {
+            console.error("No image URL found in OpenRouter response body:", data);
+            throw new Error("No image URL found in the OpenRouter response.");
+        }
+
+        // Step 2: Fetch the image from the returned URL and convert it to a base64 data URL.
+        // This is necessary because the application expects a data URL to render the image directly.
+        const imageResponse = await fetch(imageUrl);
+        if (!imageResponse.ok) {
+            throw new Error(`Failed to fetch image from URL: ${imageUrl}. Status: ${imageResponse.status}`);
+        }
+        
+        const imageBlob = await imageResponse.blob();
+        
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                if (typeof reader.result === 'string') {
+                    resolve(reader.result);
+                } else {
+                    reject(new Error('Failed to convert image blob to base64 string.'));
+                }
+            };
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(imageBlob);
+        });
+
+    } catch (error) {
+        console.error("Failed to generate image via OpenRouter:", error);
+        throw error;
     }
-    throw new Error("No image data found in the response.");
 };
 // --- END: Smart Image Generation Queue ---
 
@@ -352,6 +392,43 @@ export const translateRecipes = async (recipes: Recipe[], language: string): Pro
     const jsonText = response.text.trim();
     const result = JSON.parse(jsonText);
     return result.recipes || [];
+};
+
+export const translateTexts = async (texts: string[], language: string): Promise<string[]> => {
+    if (!texts || texts.length === 0) {
+      return [];
+    }
+    const prompt = `
+      You are a professional translation service specializing in culinary terms. Translate the following list of food ingredients into the language with the code "${language}".
+      Return the result as a single JSON object with a key "translations" which is an array of the translated strings.
+      The order of the translated strings must correspond exactly to the order of the input strings. Do not add any extra commentary or explanation.
+      Input list: ${JSON.stringify(texts)}
+    `;
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            translations: {
+              type: Type.ARRAY,
+              description: "An array of translated strings, in the same order as the input.",
+              items: { type: Type.STRING }
+            }
+          },
+          required: ["translations"]
+        }
+      }
+    });
+    const jsonText = response.text.trim();
+    const result = JSON.parse(jsonText);
+    // Fallback to original texts if translation fails to return an array of the same length
+    if (Array.isArray(result.translations) && result.translations.length === texts.length) {
+      return result.translations;
+    }
+    return texts;
 };
 
 export const getIngredientInfo = async (ingredientName: string, language: string): Promise<{ text: string; sources: any[] }> => {

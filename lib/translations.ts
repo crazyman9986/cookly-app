@@ -1,3 +1,4 @@
+
 export type Translation = {
   // Header
   appTitle: string;
@@ -123,6 +124,150 @@ const esCuisines = {
   Pakistani: 'Pakistaní', Persian: 'Persa', Peruvian: 'Peruana', Polish: 'Polaca', Portuguese: 'Portuguesa', Russian: 'Rusa',
   Scandinavian: 'Escandinava', Singaporean: 'Singapurense', SouthAmerican: 'Sudamericana', Spanish: 'Española', Swedish: 'Sueca',
   Swiss: 'Suiza', Taiwanese: 'Taiwanesa', Thai: 'Tailandesa', Turkish: 'Turca', Vietnamese: 'Vietnamita'
+};
+
+const frCuisines = {
+  African: 'Africaine', American: 'Américaine', Argentinian: 'Argentine', Australian: 'Australienne', Austrian: 'Autrichienne', Azerbaijani: 'Azerbaïdjanaise',
+  Bangladeshi: 'Bangladaise', Belgian: 'Belge', Brazilian: 'Brésilienne', British: 'Britannique', Cajun: 'Cajun', Canadian: 'Canadienne',
+  Caribbean: 'Caribéenne', Chinese: 'Chinoise', Cuban: 'Cubaine', Dutch: 'Néerlandaise', Egyptian: 'Égyptienne', Ethiopian: 'Éthiopienne', Filipino: 'Philippine',
+  French: 'Française', German: 'Allemande', Greek: 'Grecque', Hungarian: 'Hongroise', Indian: 'Indienne', Indonesian: 'Indonésienne', Irish: 'Irlandaise',
+  Israeli: 'Israélienne', Italian: 'Italienne', Jamaican: 'Jamaïcaine', Japanese: 'Japonaise', Korean: 'Coréenne', Lebanese: 'Libanaise',
+  Malaysian: 'Malaisienne', Mediterranean: 'Méditerranéenne', Mexican: 'Mexicaine', MiddleEastern: 'Du Moyen-Orient', Moroccan: 'Marocaine',
+  Pakistani: 'Pakistanaise', Persian: 'Perse', Peruvian: 'Péruvienne', Polish: 'Polonaise', Portuguese: 'Portugaise', Russian: 'Russe',
+  Scandinavian: 'Scandinave', Singaporean: 'Singapourienne', SouthAmerican: 'Sud-Américaine', Spanish: 'Espagnole', Swedish: 'Suédoise',
+  Swiss: 'Suisse', Taiwanese: 'Taïwanaise', Thai: 'Thaïlandaise', Turkish: 'Turque', Vietnamese: 'Vietnamienne'
+};
+
+const deCuisines = {
+  African: 'Afrikanisch', American: 'Amerikanisch', Argentinian: 'Argentinisch', Australian: 'Australisch', Austrian: 'Österreichisch', Azerbaijani: 'Aserbaidschanisch',
+  Bangladeshi: 'Bangladeschisch', Belgian: 'Belgisch', Brazilian: 'Brasilianisch', British: 'Britisch', Cajun: 'Cajun', Canadian: 'Kanadisch',
+  Caribbean: 'Karibisch', Chinese: 'Chinesisch', Cuban: 'Kubanisch', Dutch: 'Niederländisch', Egyptian: 'Ägyptisch', Ethiopian: 'Äthiopisch', Filipino: 'Philippinisch',
+  French: 'Französisch', German: 'Deutsch', Greek: 'Griechisch', Hungarian: 'Ungarisch', Indian: 'Indisch', Indonesian: 'Indonesisch', Irish: 'Irisch',
+  Israeli: 'Israelisch', Italian: 'Italienisch', Jamaican: 'Jamaikanisch', Japanese: 'Japanisch', Korean: 'Koreanisch', Lebanese: 'Libanesisch',
+  Malaysian: 'Malaysisch', Mediterranean: 'Mediterran', Mexican: 'Mexikanisch', MiddleEastern: 'Nahöstlich', Moroccan: 'Marokkanisch',
+  Pakistani: 'Pakistanisch', Persian: 'Persisch', Peruvian: 'Peruanisch', Polish: 'Polnisch', Portuguese: 'Portugiesisch', Russian: 'Russisch',
+  Scandinavian: 'Skandinavisch', Singaporean: 'Singapurisch', SouthAmerican: 'Südamerikanisch', Spanish: 'Spanisch', Swedish: 'Schwedisch',
+  Swiss: 'Schweizerisch', Taiwanese: 'Taiwanesisch', Thai: 'Thailändisch', Turkish: 'Türkisch', Vietnamese: 'Vietnamesisch'
+};
+
+const itCuisines = {
+  African: 'Africana', American: 'Americana', Argentinian: 'Argentina', Australian: 'Australiana', Austrian: 'Austriaca', Azerbaijani: 'Azerbaigiana',
+  Bangladeshi: 'Bengalese', Belgian: 'Belga', Brazilian: 'Brasiliana', British: 'Britannica', Cajun: 'Cajun', Canadian: 'Canadese',
+  Caribbean: 'Caraibica', Chinese: 'Cinese', Cuban: 'Cubana', Dutch: 'Olandese', Egyptian: 'Egiziana', Ethiopian: 'Etiope', Filipino: 'Filippina',
+  French: 'Francese', German: 'Tedesca', Greek: 'Greca', Hungarian: 'Ungherese', Indian: 'Indiana', Indonesian: 'Indonesiana', Irish: 'Irlandese',
+  Israeli: 'Israeliana', Italian: 'Italiana', Jamaican: 'Giamaicana', Japanese: 'Giapponese', Korean: 'Coreana', Lebanese: 'Libanese',
+  Malaysian: 'Malese', Mediterranean: 'Mediterranea', Mexican: 'Messicana', MiddleEastern: 'Mediorientale', Moroccan: 'Marocchina',
+  Pakistani: 'Pakistana', Persian: 'Persiana', Peruvian: 'Peruviana', Polish: 'Polacca', Portuguese: 'Portoghese', Russian: 'Russa',
+  Scandinavian: 'Scandinava', Singaporean: 'Singaporeana', SouthAmerican: 'Sudamericana', Spanish: 'Spagnola', Swedish: 'Svedese',
+  Swiss: 'Svizzera', Taiwanese: 'Taiwanese', Thai: 'Tailandese', Turkish: 'Turca', Vietnamese: 'Vietnamita'
+};
+
+const hiCuisines = {
+  African: 'अफ़्रीकी', American: 'अमेरिकी', Argentinian: 'अर्जेंटीना', Australian: 'ऑस्ट्रेलियाई', Austrian: 'ऑस्ट्रियाई', Azerbaijani: 'अज़रबैजानी',
+  Bangladeshi: 'बांग्लादेशी', Belgian: 'बेल्जियम', Brazilian: 'ब्राज़ीलियाई', British: 'ब्रिटिश', Cajun: 'काजुन', Canadian: 'कनाडाई',
+  Caribbean: 'कैरेबियन', Chinese: 'चीनी', Cuban: 'क्यूबाई', Dutch: 'डच', Egyptian: 'मिस्री', Ethiopian: 'इथियोपियाई', Filipino: 'फिलिपिनो',
+  French: 'फ्रांसीसी', German: 'जर्मन', Greek: 'यूनानी', Hungarian: 'हंगरी', Indian: 'भारतीय', Indonesian: 'इंडोनेशियाई', Irish: 'आयरिश',
+  Israeli: 'इज़राइली', Italian: 'इतालवी', Jamaican: 'जमैका', Japanese: 'जापानी', Korean: 'कोरियाई', Lebanese: 'लेबनानी',
+  Malaysian: 'मलेशियाई', Mediterranean: 'भूमध्यसागरीय', Mexican: 'मैक्सिकन', MiddleEastern: 'मध्य पूर्वी', Moroccan: 'मोरक्कन',
+  Pakistani: 'पाकिस्तानी', Persian: 'फारसी', Peruvian: 'पेरू', Polish: 'पोलिश', Portuguese: 'पुर्तगाली', Russian: 'रूसी',
+  Scandinavian: 'स्कैंडिनेवियाई', Singaporean: 'सिंगापुरी', SouthAmerican: 'दक्षिण अमेरिकी', Spanish: 'स्पेनिश', Swedish: 'स्वीडिश',
+  Swiss: 'स्विस', Taiwanese: 'ताइवानी', Thai: 'थाई', Turkish: 'तुर्की', Vietnamese: 'वियतनामी'
+};
+
+const jaCuisines = {
+  African: 'アフリカ料理', American: 'アメリカ料理', Argentinian: 'アルゼンチン料理', Australian: 'オーストラリア料理', Austrian: 'オーストリア料理', Azerbaijani: 'アゼルバイジャン料理',
+  Bangladeshi: 'バングラデシュ料理', Belgian: 'ベルギー料理', Brazilian: 'ブラジル料理', British: 'イギリス料理', Cajun: 'ケイジャン料理', Canadian: 'カナダ料理',
+  Caribbean: 'カリブ料理', Chinese: '中華料理', Cuban: 'キューバ料理', Dutch: 'オランダ料理', Egyptian: 'エジプト料理', Ethiopian: 'エチオピア料理', Filipino: 'フィリピン料理',
+  French: 'フランス料理', German: 'ドイツ料理', Greek: 'ギリシャ料理', Hungarian: 'ハンガリー料理', Indian: 'インド料理', Indonesian: 'インドネシア料理', Irish: 'アイルランド料理',
+  Israeli: 'イスラエル料理', Italian: 'イタリア料理', Jamaican: 'ジャマイカ料理', Japanese: '日本料理', Korean: '韓国料理', Lebanese: 'レバノン料理',
+  Malaysian: 'マレーシア料理', Mediterranean: '地中海料理', Mexican: 'メキシコ料理', MiddleEastern: '中東料理', Moroccan: 'モロッコ料理',
+  Pakistani: 'パキスタン料理', Persian: 'ペルシャ料理', Peruvian: 'ペルー料理', Polish: 'ポーランド料理', Portuguese: 'ポルトガル料理', Russian: 'ロシア料理',
+  Scandinavian: 'スカンジナビア料理', Singaporean: 'シンガポール料理', SouthAmerican: '南米料理', Spanish: 'スペイン料理', Swedish: 'スウェーデン料理',
+  Swiss: 'スイス料理', Taiwanese: '台湾料理', Thai: 'タイ料理', Turkish: 'トルコ料理', Vietnamese: 'ベトナム料理'
+};
+
+const ruCuisines = {
+  African: 'Африканская', American: 'Американская', Argentinian: 'Аргентинская', Australian: 'Австралийская', Austrian: 'Австрийская', Azerbaijani: 'Азербайджанская',
+  Bangladeshi: 'Бангладешская', Belgian: 'Бельгийская', Brazilian: 'Бразильская', British: 'Британская', Cajun: 'Каджунская', Canadian: 'Канадская',
+  Caribbean: 'Карибская', Chinese: 'Китайская', Cuban: 'Кубинская', Dutch: 'Голландская', Egyptian: 'Египетская', Ethiopian: 'Эфиопская', Filipino: 'Филиппинская',
+  French: 'Французская', German: 'Немецкая', Greek: 'Греческая', Hungarian: 'Венгерская', Indian: 'Индийская', Indonesian: 'Индонезийская', Irish: 'Ирландская',
+  Israeli: 'Израильская', Italian: 'Итальянская', Jamaican: 'Ямайская', Japanese: 'Японская', Korean: 'Корейская', Lebanese: 'Ливанская',
+  Malaysian: 'Малазийская', Mediterranean: 'Средиземноморская', Mexican: 'Мексиканская', MiddleEastern: 'Ближневосточная', Moroccan: 'Марокканская',
+  Pakistani: 'Пакистанская', Persian: 'Персидская', Peruvian: 'Перуанская', Polish: 'Польская', Portuguese: 'Португальская', Russian: 'Русская',
+  Scandinavian: 'Скандинавская', Singaporean: 'Сингапурская', SouthAmerican: 'Южноамериканская', Spanish: 'Испанская', Swedish: 'Шведская',
+  Swiss: 'Швейцарская', Taiwanese: 'Тайваньская', Thai: 'Тайская', Turkish: 'Турецкая', Vietnamese: 'Вьетнамская'
+};
+
+const ptCuisines = {
+  African: 'Africana', American: 'Americana', Argentinian: 'Argentina', Australian: 'Australiana', Austrian: 'Austríaca', Azerbaijani: 'Azerbaijana',
+  Bangladeshi: 'Bengali', Belgian: 'Belga', Brazilian: 'Brasileira', British: 'Britânica', Cajun: 'Cajun', Canadian: 'Canadense',
+  Caribbean: 'Caribenha', Chinese: 'Chinesa', Cuban: 'Cubana', Dutch: 'Holandesa', Egyptian: 'Egípcia', Ethiopian: 'Etíope', Filipino: 'Filipina',
+  French: 'Francesa', German: 'Alemã', Greek: 'Grega', Hungarian: 'Húngara', Indian: 'Indiana', Indonesian: 'Indonésia', Irish: 'Irlandesa',
+  Israeli: 'Israelense', Italian: 'Italiana', Jamaican: 'Jamaicana', Japanese: 'Japonesa', Korean: 'Coreana', Lebanese: 'Libanesa',
+  Malaysian: 'Malaia', Mediterranean: 'Mediterrânea', Mexican: 'Mexicana', MiddleEastern: 'Do Oriente Médio', Moroccan: 'Marroquina',
+  Pakistani: 'Paquistanesa', Persian: 'Persa', Peruvian: 'Peruana', Polish: 'Polonesa', Portuguese: 'Portuguesa', Russian: 'Russa',
+  Scandinavian: 'Escandinava', Singaporean: 'Singapurense', SouthAmerican: 'Sul-Americana', Spanish: 'Espanhola', Swedish: 'Sueca',
+  Swiss: 'Suíça', Taiwanese: 'Taiwanesa', Thai: 'Tailandesa', Turkish: 'Turca', Vietnamese: 'Vietnamita'
+};
+
+const trCuisines = {
+  African: 'Afrika', American: 'Amerikan', Argentinian: 'Arjantin', Australian: 'Avustralya', Austrian: 'Avusturya', Azerbaijani: 'Azerbaycan',
+  Bangladeshi: 'Bangladeş', Belgian: 'Belçika', Brazilian: 'Brezilya', British: 'İngiliz', Cajun: 'Cajun', Canadian: 'Kanada',
+  Caribbean: 'Karayip', Chinese: 'Çin', Cuban: 'Küba', Dutch: 'Hollanda', Egyptian: 'Mısır', Ethiopian: 'Etiyopya', Filipino: 'Filipin',
+  French: 'Fransız', German: 'Alman', Greek: 'Yunan', Hungarian: 'Macar', Indian: 'Hint', Indonesian: 'Endonezya', Irish: 'İrlanda',
+  Israeli: 'İsrail', Italian: 'İtalyan', Jamaican: 'Jamaika', Japanese: 'Japon', Korean: 'Kore', Lebanese: 'Lübnan',
+  Malaysian: 'Malezya', Mediterranean: 'Akdeniz', Mexican: 'Meksika', MiddleEastern: 'Orta Doğu', Moroccan: 'Fas',
+  Pakistani: 'Pakistan', Persian: 'İran', Peruvian: 'Peru', Polish: 'Polonya', Portuguese: 'Portekiz', Russian: 'Rus',
+  Scandinavian: 'İskandinav', Singaporean: 'Singapur', SouthAmerican: 'Güney Amerika', Spanish: 'İspanyol', Swedish: 'İsveç',
+  Swiss: 'İsviçre', Taiwanese: 'Tayvan', Thai: 'Tayland', Turkish: 'Türk', Vietnamese: 'Vietnam'
+};
+
+const azCuisines = {
+  African: 'Afrika', American: 'Amerika', Argentinian: 'Argentina', Australian: 'Avstraliya', Austrian: 'Avstriya', Azerbaijani: 'Azərbaycan',
+  Bangladeshi: 'Banqladeş', Belgian: 'Belçika', Brazilian: 'Braziliya', British: 'Britaniya', Cajun: 'Kajun', Canadian: 'Kanada',
+  Caribbean: 'Karib', Chinese: 'Çin', Cuban: 'Kuba', Dutch: 'Holland', Egyptian: 'Misir', Ethiopian: 'Efiopiya', Filipino: 'Filippin',
+  French: 'Fransız', German: 'Alman', Greek: 'Yunan', Hungarian: 'Macar', Indian: 'Hind', Indonesian: 'İndoneziya', Irish: 'İrland',
+  Israeli: 'İsrail', Italian: 'İtalyan', Jamaican: 'Yamayka', Japanese: 'Yapon', Korean: 'Koreya', Lebanese: 'Livan',
+  Malaysian: 'Malayziya', Mediterranean: 'Aralıq dənizi', Mexican: 'Meksika', MiddleEastern: 'Yaxın Şərq', Moroccan: 'Mərakeş',
+  Pakistani: 'Pakistan', Persian: 'Fars', Peruvian: 'Peru', Polish: 'Polyak', Portuguese: 'Portuqal', Russian: 'Rus',
+  Scandinavian: 'Skandinaviya', Singaporean: 'Sinqapur', SouthAmerican: 'Cənubi Amerika', Spanish: 'İspan', Swedish: 'İsveç',
+  Swiss: 'İsveçrə', Taiwanese: 'Tayvan', Thai: 'Tayland', Turkish: 'Türk', Vietnamese: 'Vyetnam'
+};
+
+const plCuisines = {
+  African: 'Afrykańska', American: 'Amerykańska', Argentinian: 'Argentyńska', Australian: 'Australijska', Austrian: 'Austriacka', Azerbaijani: 'Azerbejdżańska',
+  Bangladeshi: 'Bangladeska', Belgian: 'Belgijska', Brazilian: 'Brazylijska', British: 'Brytyjska', Cajun: 'Kajun', Canadian: 'Kanadyjska',
+  Caribbean: 'Karaibska', Chinese: 'Chińska', Cuban: 'Kubańska', Dutch: 'Holenderska', Egyptian: 'Egipska', Ethiopian: 'Etiopska', Filipino: 'Filipińska',
+  French: 'Francuska', German: 'Niemiecka', Greek: 'Grecka', Hungarian: 'Węgierska', Indian: 'Indyjska', Indonesian: 'Indonezyjska', Irish: 'Irlandzka',
+  Israeli: 'Izraelska', Italian: 'Włoska', Jamaican: 'Jamajska', Japanese: 'Japońska', Korean: 'Koreańska', Lebanese: 'Libańska',
+  Malaysian: 'Malezyjska', Mediterranean: 'Śródziemnomorska', Mexican: 'Meksykańska', MiddleEastern: 'Bliskowschodnia', Moroccan: 'Marokańska',
+  Pakistani: 'Pakistańska', Persian: 'Perska', Peruvian: 'Peruwiańska', Polish: 'Polska', Portuguese: 'Portugalska', Russian: 'Rosyjska',
+  Scandinavian: 'Skandynawska', Singaporean: 'Singapurska', SouthAmerican: 'Południowoamerykańska', Spanish: 'Hiszpańska', Swedish: 'Szwedzka',
+  Swiss: 'Szwajcarska', Taiwanese: 'Tajwańska', Thai: 'Tajska', Turkish: 'Turecka', Vietnamese: 'Wietnamska'
+};
+
+const zhCuisines = {
+  African: '非洲菜', American: '美国菜', Argentinian: '阿根廷菜', Australian: '澳大利亚菜', Austrian: '奥地利菜', Azerbaijani: '阿塞拜疆菜',
+  Bangladeshi: '孟加拉菜', Belgian: '比利时菜', Brazilian: '巴西菜', British: '英国菜', Cajun: '卡真菜', Canadian: '加拿大菜',
+  Caribbean: '加勒比菜', Chinese: '中国菜', Cuban: '古巴菜', Dutch: '荷兰菜', Egyptian: '埃及菜', Ethiopian: '埃塞俄比亚菜', Filipino: '菲律宾菜',
+  French: '法国菜', German: '德国菜', Greek: '希腊菜', Hungarian: '匈牙利菜', Indian: '印度菜', Indonesian: '印度尼西亚菜', Irish: '爱尔兰菜',
+  Israeli: '以色列菜', Italian: '意大利菜', Jamaican: '牙买加菜', Japanese: '日本菜', Korean: '韩国菜', Lebanese: '黎巴嫩菜',
+  Malaysian: '马来西亚菜', Mediterranean: '地中海菜', Mexican: '墨西哥菜', MiddleEastern: '中东菜', Moroccan: '摩洛哥菜',
+  Pakistani: '巴基斯坦菜', Persian: '波斯菜', Peruvian: '秘鲁菜', Polish: '波兰菜', Portuguese: '葡萄牙菜', Russian: '俄罗斯菜',
+  Scandinavian: '斯堪的纳维亚菜', Singaporean: '新加坡菜', SouthAmerican: '南美菜', Spanish: '西班牙菜', Swedish: '瑞典菜',
+  Swiss: '瑞士菜', Taiwanese: '台湾菜', Thai: '泰国菜', Turkish: '土耳其菜', Vietnamese: '越南菜'
+};
+
+const arCuisines = {
+  African: 'أفريقي', American: 'أمريكي', Argentinian: 'أرجنتيني', Australian: 'أسترالي', Austrian: 'نمساوي', Azerbaijani: 'أذربيجاني',
+  Bangladeshi: 'بنغلاديشي', Belgian: 'بلجيكي', Brazilian: 'برازيلي', British: 'بريطاني', Cajun: 'كاجون', Canadian: 'كندي',
+  Caribbean: 'كاريبي', Chinese: 'صيني', Cuban: 'كوبي', Dutch: 'هولندي', Egyptian: 'مصري', Ethiopian: 'إثيوبي', Filipino: 'فلبيني',
+  French: 'فرنسي', German: 'ألماني', Greek: 'يوناني', Hungarian: 'مجري', Indian: 'هندي', Indonesian: 'إندونيسي', Irish: 'أيرلندي',
+  Israeli: 'إسرائيلي', Italian: 'إيطالي', Jamaican: 'جامايكي', Japanese: 'ياباني', Korean: 'كوري', Lebanese: 'لبناني',
+  Malaysian: 'ماليزي', Mediterranean: 'بحر أبيض متوسط', Mexican: 'مكسيكي', MiddleEastern: 'شرق أوسطي', Moroccan: 'مغربي',
+  Pakistani: 'باكستاني', Persian: 'فارسي', Peruvian: 'بيروفي', Polish: 'بولندي', Portuguese: 'برتغالي', Russian: 'روسي',
+  Scandinavian: 'اسكندنافي', Singaporean: 'سنغافوري', SouthAmerican: 'أمريكي جنوبي', Spanish: 'إسباني', Swedish: 'سويدي',
+  Swiss: 'سويسري', Taiwanese: 'تايواني', Thai: 'تايلاندي', Turkish: 'تركي', Vietnamese: 'فيتنامي'
 };
 
 export const translations: { [key: string]: Translation } = {
@@ -370,7 +515,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'Végétarien', VEGAN: 'Végétalien', GLUTEN_FREE: 'Sans Gluten', KETO: 'Céto', LOW_CARB: 'Faible en Glucides',
       DAIRY_FREE: 'Sans Produits Laitiers', NUT_FREE: 'Sans Noix', PALEO: 'Paléo', PESCATARIAN: 'Pescatarien',
     },
-    cuisines: enCuisines,
+    cuisines: frCuisines,
   },
   de: {
     appTitle: 'Cookly',
@@ -452,7 +597,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'Vegetarisch', VEGAN: 'Vegan', GLUTEN_FREE: 'Glutenfrei', KETO: 'Keto', LOW_CARB: 'Low-Carb',
       DAIRY_FREE: 'Milchfrei', NUT_FREE: 'Nussfrei', PALEO: 'Paleo', PESCATARIAN: 'Pescatarisch',
     },
-    cuisines: enCuisines,
+    cuisines: deCuisines,
   },
   it: {
     appTitle: 'Cookly',
@@ -534,7 +679,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'Vegetariano', VEGAN: 'Vegano', GLUTEN_FREE: 'Senza Glutine', KETO: 'Chetogenico', LOW_CARB: 'A Basso Contenuto di Carboidrati',
       DAIRY_FREE: 'Senza Latticini', NUT_FREE: 'Senza Frutta a Guscio', PALEO: 'Paleo', PESCATARIAN: 'Pescatariano',
     },
-    cuisines: enCuisines,
+    cuisines: itCuisines,
   },
   hi: {
     appTitle: 'Cookly',
@@ -616,7 +761,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'शाकाहारी', VEGAN: 'वेगन', GLUTEN_FREE: 'ग्लूटेन-मुक्त', KETO: 'कीटो', LOW_CARB: 'कम-कार्ब',
       DAIRY_FREE: 'डेयरी-मुक्त', NUT_FREE: 'नट-मुक्त', PALEO: 'पेलियो', PESCATARIAN: 'पेस्केटेरियन',
     },
-    cuisines: enCuisines,
+    cuisines: hiCuisines,
   },
   ja: {
     appTitle: 'Cookly',
@@ -698,7 +843,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'ベジタリアン', VEGAN: 'ビーガン', GLUTEN_FREE: 'グルテンフリー', KETO: 'ケト', LOW_CARB: '低炭水化物',
       DAIRY_FREE: '乳製品不使用', NUT_FREE: 'ナッツ不使用', PALEO: 'パレオ', PESCATARIAN: 'ペスカタリアン',
     },
-    cuisines: enCuisines,
+    cuisines: jaCuisines,
   },
   ru: {
     appTitle: 'Cookly',
@@ -780,7 +925,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'Вегетарианство', VEGAN: 'Веганство', GLUTEN_FREE: 'Без глютена', KETO: 'Кето', LOW_CARB: 'Низкоуглеводная',
       DAIRY_FREE: 'Без молочных продуктов', NUT_FREE: 'Без орехов', PALEO: 'Палео', PESCATARIAN: 'Пескетарианство',
     },
-    cuisines: enCuisines,
+    cuisines: ruCuisines,
   },
   pt: {
     appTitle: 'Cookly',
@@ -862,7 +1007,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'Vegetariano', VEGAN: 'Vegano', GLUTEN_FREE: 'Sem Glúten', KETO: 'Ceto', LOW_CARB: 'Baixo Carboidrato',
       DAIRY_FREE: 'Sem Laticínios', NUT_FREE: 'Sem Nozes', PALEO: 'Paleo', PESCATARIAN: 'Pescatariano',
     },
-    cuisines: enCuisines,
+    cuisines: ptCuisines,
   },
   tr: {
     appTitle: 'Cookly',
@@ -944,7 +1089,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'Vejetaryen', VEGAN: 'Vegan', GLUTEN_FREE: 'Glutensiz', KETO: 'Keto', LOW_CARB: 'Düşük Karbonhidrat',
       DAIRY_FREE: 'Sütsüz', NUT_FREE: 'Kuruyemişsiz', PALEO: 'Paleo', PESCATARIAN: 'Pesketaryen',
     },
-    cuisines: enCuisines,
+    cuisines: trCuisines,
   },
   az: {
     appTitle: 'Cookly',
@@ -1026,7 +1171,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'Vegetarian', VEGAN: 'Veqan', GLUTEN_FREE: 'Qlütensiz', KETO: 'Keto', LOW_CARB: 'Aşağı Karbohidratlı',
       DAIRY_FREE: 'Südsüz', NUT_FREE: 'Fındıqsız', PALEO: 'Paleo', PESCATARIAN: 'Pesketarian',
     },
-    cuisines: enCuisines,
+    cuisines: azCuisines,
   },
   pl: {
     appTitle: 'Cookly',
@@ -1108,7 +1253,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'Wegetariańska', VEGAN: 'Wegańska', GLUTEN_FREE: 'Bezglutenowa', KETO: 'Keto', LOW_CARB: 'Niskowęglowodanowa',
       DAIRY_FREE: 'Bez nabiału', NUT_FREE: 'Bez orzechów', PALEO: 'Paleo', PESCATARIAN: 'Pescatariańska',
     },
-    cuisines: enCuisines,
+    cuisines: plCuisines,
   },
   zh: {
     appTitle: 'Cookly',
@@ -1190,7 +1335,7 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: '素食', VEGAN: '纯素', GLUTEN_FREE: '无麸质', KETO: '生酮', LOW_CARB: '低碳水',
       DAIRY_FREE: '无乳制品', NUT_FREE: '无坚果', PALEO: '旧石器', PESCATARIAN: '鱼素',
     },
-    cuisines: enCuisines,
+    cuisines: zhCuisines,
   },
   ar: {
     appTitle: 'Cookly',
@@ -1272,6 +1417,6 @@ export const translations: { [key: string]: Translation } = {
       VEGETARIAN: 'نباتي', VEGAN: 'نباتي صرف', GLUTEN_FREE: 'خالٍ من الغلوتين', KETO: 'كيتو', LOW_CARB: 'قليل الكربوهيدرات',
       DAIRY_FREE: 'خالٍ من الألبان', NUT_FREE: 'خالٍ من المكسرات', PALEO: 'باليو', PESCATARIAN: 'نباتي يأكل السمك',
     },
-    cuisines: enCuisines,
+    cuisines: arCuisines,
   },
 };

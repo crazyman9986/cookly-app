@@ -1,22 +1,23 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { ChevronDownIcon } from './icons/ChevronDownIcon';
 
 const languages = {
-  en: { name: 'English', flag: '🇬🇧', code: 'EN' },
-  es: { name: 'Español', flag: '🇪🇸', code: 'ES' },
-  fr: { name: 'Français', flag: '🇫🇷', code: 'FR' },
-  de: { name: 'Deutsch', flag: '🇩🇪', code: 'DE' },
-  it: { name: 'Italiano', flag: '🇮🇹', code: 'IT' },
-  hi: { name: 'हिन्दी', flag: '🇮🇳', code: 'HI' },
-  ja: { name: '日本語', flag: '🇯🇵', code: 'JA' },
-  ru: { name: 'Русский', flag: '🇷🇺', code: 'RU' },
-  pt: { name: 'Português', flag: '🇵🇹', code: 'PT' },
-  tr: { name: 'Türkçe', flag: '🇹🇷', code: 'TR' },
-  az: { name: 'Azərbaycanca', flag: '🇦🇿', code: 'AZ' },
-  pl: { name: 'Polski', flag: '🇵🇱', code: 'PL' },
-  zh: { name: '中文', flag: '🇨🇳', code: 'ZH' },
-  ar: { name: 'العربية', flag: '🇸🇦', code: 'AR' },
+  en: { name: 'English', flag: 'gb', code: 'EN' },
+  es: { name: 'Español', flag: 'es', code: 'ES' },
+  fr: { name: 'Français', flag: 'fr', code: 'FR' },
+  de: { name: 'Deutsch', flag: 'de', code: 'DE' },
+  it: { name: 'Italiano', flag: 'it', code: 'IT' },
+  hi: { name: 'हिन्दी', flag: 'in', code: 'HI' },
+  ja: { name: '日本語', flag: 'jp', code: 'JA' },
+  ru: { name: 'Русский', flag: 'ru', code: 'RU' },
+  pt: { name: 'Português', flag: 'pt', code: 'PT' },
+  tr: { name: 'Türkçe', flag: 'tr', code: 'TR' },
+  az: { name: 'Azərbaycanca', flag: 'az', code: 'AZ' },
+  pl: { name: 'Polski', flag: 'pl', code: 'PL' },
+  zh: { name: '中文', flag: 'cn', code: 'ZH' },
+  ar: { name: 'العربية', flag: 'sa', code: 'AR' },
 };
 
 type LanguageCode = keyof typeof languages;
@@ -74,7 +75,7 @@ const LanguageSwitcher: React.FC = () => {
                   }`}
                 role="menuitem"
               >
-                <span className="text-lg w-8 text-center">{flag}</span>
+                <img src={`https://flagcdn.com/w40/${flag}.png`} alt={name} className="w-6 h-auto rounded-sm object-cover" />
                 <span className={`${language === code ? 'font-semibold' : ''}`}>{name}</span>
               </button>
             ))}

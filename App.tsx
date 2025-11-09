@@ -1,6 +1,6 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { analyzeFridge, getRecipes, generateRecipeImage, validateIngredients, translateRecipes, validateImageContent } from './services/geminiService';
+import { analyzeFridge, getRecipes, generateRecipeImage, validateIngredients, translateRecipes, validateImageContent, translateTexts } from './services/geminiService';
 import { Recipe, DietaryFilter, ShoppingListItem } from './types';
 import ImageUploader from './components/ImageUploader';
 import FilterSidebar from './components/FilterSidebar';
@@ -16,6 +16,7 @@ import { WarningIcon } from './components/icons/WarningIcon';
 const App: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
   const [ingredients, setIngredients] = useState<string[]>([]);
+  const [translatedIngredients, setTranslatedIngredients] = useState<string[]>([]);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [activeFilters, setActiveFilters] = useState<DietaryFilter[]>([]);
   const [shoppingList, setShoppingList] = useState<ShoppingListItem[]>([]);
@@ -266,6 +267,36 @@ const App: React.FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [language, translations.errorFetch]);
   
+  // Translates the main ingredient list when language or ingredients change
+  useEffect(() => {
+    if (ingredients.length === 0) {
+        setTranslatedIngredients([]);
+        return;
+    }
+    // No need to call API if language is English
+    if (language === 'en') {
+        setTranslatedIngredients(ingredients);
+        return;
+    }
+
+    let isMounted = true;
+    translateTexts(ingredients, language)
+        .then(translations => {
+            if (isMounted) {
+                setTranslatedIngredients(translations);
+            }
+        })
+        .catch(err => {
+            console.error("Failed to translate ingredients:", err);
+            if (isMounted) {
+                // Fallback to original ingredients on error
+                setTranslatedIngredients(ingredients);
+            }
+        });
+
+    return () => { isMounted = false; };
+  }, [ingredients, language]);
+
 
   const handleFilterChange = useCallback((filter: DietaryFilter) => {
     const newFilters = activeFilters.includes(filter)
@@ -443,11 +474,11 @@ const App: React.FC = () => {
                         <div className="mt-6 p-4 bg-indigo-50 dark:bg-slate-700/50 rounded-lg">
                             <h3 className="font-semibold text-indigo-800 dark:text-indigo-300 mb-3">{translations.availableIngredients}:</h3>
                             <div className="flex flex-wrap gap-2">
-                                {ingredients.map((ing, i) => (
+                                {(translatedIngredients.length > 0 ? translatedIngredients : ingredients).map((ing, i) => (
                                     <div key={i} className="flex items-center gap-2 px-3 py-1 bg-white dark:bg-slate-600 text-indigo-700 dark:text-indigo-200 rounded-full text-sm font-medium border border-indigo-200 dark:border-slate-500 transition-all hover:shadow-sm">
                                         <span>{ing}</span>
                                         <button 
-                                            onClick={() => handleRemoveIngredient(ing)} 
+                                            onClick={() => handleRemoveIngredient(ingredients[i])} 
                                             className="text-indigo-400 dark:text-indigo-300 hover:text-indigo-700 dark:hover:text-white p-0.5 rounded-full hover:bg-indigo-100 dark:hover:bg-slate-500"
                                             aria-label={`Remove ${ing}`}
                                         >
