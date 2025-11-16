@@ -6,7 +6,7 @@ import { Recipe, DietaryFilter, Ingredient } from '../types';
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 // --- START: Smart Image Generation Queue ---
-const RATE_LIMIT_DELAY = 5000; // 5 seconds between requests, a safe buffer for the free tier.
+const RATE_LIMIT_DELAY = 2000; // 2 seconds between image requests to be polite to the image service.
 
 type QueuedImageRequest = {
   prompt: string;
@@ -54,66 +54,47 @@ export const generateRecipeImage = (prompt: string): Promise<string> => {
 };
 
 /**
- * The internal function that now calls the OpenRouter API.
- * Should only be called by the queue processor.
- * It fetches an image URL from the API and then converts that image to a base64 string
- * for direct use in the application.
+ * The internal function that now constructs a URL for the Unsplash Source API.
+ * This removes the dependency on generative AI for images and avoids CORS issues
+ * by letting the <img> tag handle the image fetching directly.
+ * @param prompt The prompt used to generate keywords for the image search.
+ * @returns A promise that resolves with a URL to an image from Unsplash.
  */
-const internalGenerateRecipeImage = async (prompt: string): Promise<string> => {
+const internalGenerateRecipeImage = (prompt: string): Promise<string> => {
     try {
-        // Step 1: Call OpenRouter API to get an image URL.
-        // Switched to Stable Diffusion 3, a model featured in OpenRouter's documentation,
-        // and simplified headers to resolve the persistent 405 error.
-        const response = await fetch('https://openrouter.ai/api/v1/images/generations', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${process.env.API_KEY}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: 'stabilityai/stable-diffusion-3',
-                prompt: prompt,
-            }),
-        });
+        // Sanitize the prompt to be used as keywords in a URL for Unsplash.
+        const keywords = prompt
+            .toLowerCase()
+            // Remove common generative AI/photo terms
+            .replace(/photorealistic|food photography|close-up shot|dynamic shot of|a plate of|a bowl of|delicious|a dish of/g, '')
+            // Remove common stop words
+            .replace(/\b(and|with|on|of|a|the|in|for)\b/g, '')
+            // Remove special characters, keep letters, numbers, spaces
+            .replace(/[^a-z0-9\s]/g, '')
+            .trim()
+            // Replace spaces with commas for the query
+            .replace(/\s+/g, ',')
+            // Take the first few keywords to keep the query relevant
+            .split(',').filter(Boolean).slice(0, 4).join(',');
 
-        if (!response.ok) {
-            const errorBody = await response.text();
-            throw new Error(`OpenRouter API failed with status ${response.status}. Response: ${errorBody}`);
-        }
+        // Fallback keywords if prompt becomes empty after sanitization
+        const finalKeywords = keywords || 'food,cooking,recipe';
 
-        const data = await response.json();
-        const imageUrl = data.data?.[0]?.url;
-
-        if (!imageUrl) {
-            console.error("No image URL found in OpenRouter response body:", data);
-            throw new Error("No image URL found in the OpenRouter response.");
-        }
-
-        // Step 2: Fetch the image from the returned URL and convert it to a base64 data URL.
-        // This is necessary because the application expects a data URL to render the image directly.
-        const imageResponse = await fetch(imageUrl);
-        if (!imageResponse.ok) {
-            throw new Error(`Failed to fetch image from URL: ${imageUrl}. Status: ${imageResponse.status}`);
-        }
+        const encodedKeywords = encodeURIComponent(finalKeywords);
         
-        const imageBlob = await imageResponse.blob();
+        // Add a cache-busting parameter to ensure a fresh image is requested every time.
+        // This prevents browsers or networks from caching a failed or incorrect response.
+        const cacheBuster = `&sig=${Math.random()}`;
         
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                if (typeof reader.result === 'string') {
-                    resolve(reader.result);
-                } else {
-                    reject(new Error('Failed to convert image blob to base64 string.'));
-                }
-            };
-            reader.onerror = (error) => reject(error);
-            reader.readAsDataURL(imageBlob);
-        });
+        const unsplashUrl = `https://source.unsplash.com/800x450/?${encodedKeywords}${cacheBuster}`;
+
+        return Promise.resolve(unsplashUrl);
 
     } catch (error) {
-        console.error("Failed to generate image via OpenRouter:", error);
-        throw error;
+        console.error("Failed to construct Unsplash URL:", error);
+        // Fallback to a generic placeholder if string processing fails, to avoid breaking the UI.
+        const placeholder = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjQ1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZWFkZWRlIiAvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIzMCIgZmlsbD0iI2FhYSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
+        return Promise.resolve(placeholder);
     }
 };
 // --- END: Smart Image Generation Queue ---
